@@ -1,0 +1,182 @@
+<html>
+		<body onmousemove="mouse_position(event)">
+		<canvas id="canvas" width="800" height="600">
+		</canvas>
+	<script>
+		//init
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		var ballX = canvas.width/2;
+		var ballY = canvas.height/2;
+		var ballSpeedX = 10;
+		var ballSpeedY = 5;
+		var player1Y = canvas.height/2-50;
+		var player2Y = player1Y;
+		var mouseY;
+		var player1Score = 0;
+		var player2Score = 0;
+		
+		window.onload = function(){
+			//draw everything
+			setInterval(function(){
+				drawCanvas();
+				ballPhysics();
+				player1Physics();
+				player2Physics();
+			}, 1000/15);
+			
+		}
+		
+		function drawCanvas(){
+			//draw base canvas element
+			ctx.fillStyle = "black";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			
+			//draw left player
+			colorRect(15, player1Y, 15, 100);
+			
+			//draw right player
+			colorRect(canvas.width-30, player2Y, 15, 100);
+			
+			//drawball
+			colorCircle(ballX, ballY, 10);
+			
+			//draw player1 score
+			colorText(player1Score, canvas.width/3, 100);
+			
+			//draw player2 scored
+			colorText(player2Score, canvas.width/1.5, 100);
+			
+			//draw net
+			for(var i = 10; i < canvas.height; i += 40){
+				colorRect(canvas.width/2-1, i, 2, 20)
+			}
+		}
+		
+		function colorRect(x, y, width, height){
+			ctx.fillStyle = "white";
+			ctx.fillRect(x, y, width, height);
+		}
+		
+		function colorCircle(x, y, radius){
+			ctx.beginPath();
+			ctx.fillStyle = "white";
+			ctx.arc(x,y,radius,0,2*Math.PI);
+			ctx.fill();
+			
+		}
+		
+		function colorText(text, x, y){
+			ctx.fillText(text, x, y)
+		}
+		
+		function ballPhysics(){
+			//move ball on update
+			ballX += ballSpeedX;
+			ballY += ballSpeedY;
+			
+			//bounce off walls
+			if(ballY < 10){
+				ballSpeedY = -ballSpeedY;
+			} else if(ballY > canvas.height-10){
+				ballSpeedY = -ballSpeedY;
+			}
+			
+			//bounce of player1 bat
+			if(ballX == 30){
+				if(ballY >= player1Y && ballY <= player1Y+100){
+					ballSpeedX = -ballSpeedX;
+					//change ballY direction
+					if(ballY < player1Y+45){
+						incrementSpeed();
+						ballUp();
+					} else if(ballY > player1Y+55){
+						incrementSpeed();
+						ballDown();
+					}
+				}
+			}
+			
+			//bounce of player2 bat
+			if(ballX == canvas.width-30){
+				if(ballY >= player2Y && ballY <= player2Y+100){
+					ballSpeedX = -ballSpeedX;
+					//change ballY direction
+					if(ballY < player2Y+45){
+						incrementSpeed();
+						ballUp();
+					} else if(ballY > player2Y+55){
+						incrementSpeed();
+						ballDown();
+					}
+				}
+			}
+			
+			//player1 scored
+			if(ballX > canvas.width+10){
+				player2Score += 1;
+				ballReset();
+			}
+			
+			//player2 scored
+			if(ballX < 0){
+				player2Score += 1;
+				ballReset();
+			}
+		}
+		
+		function player1Physics(){
+			//move towards mouse
+			if(player1Y+45 > mouseY){
+				player1Y -= 12;
+			} else if(player1Y+55 < mouseY){
+				player1Y += 12;
+			} else{
+				//do nothing
+			}
+		}
+		
+		function player2Physics(){
+			//move towards ball
+			if(player2Y+50 > ballY){
+				player2Y -= 10;
+			} else if(player2Y+50 < ballY){
+				player2Y += 10;
+			} else{
+				//do nothing
+			}
+		}
+		
+		function mouse_position(e)
+		{
+			mouseY = e.clientY;
+		}
+		
+		function ballReset(){
+			ballX = canvas.width/2;
+			ballY = canvas.height/2;
+			ballSpeedX = -ballSpeedX;
+		}
+		
+		function incrementSpeed(){
+			if(ballSpeedY < 0){
+				ballSpeedY -= 5
+			} else if(ballSpeedY > 0){
+				ballSpeedY += 5
+			}
+		}
+		
+		function ballUp(){
+			if(ballSpeedY > 0){
+				ballSpeedY = -ballSpeedY
+			}
+		}
+		
+		function ballDown(){
+			if(ballSpeedY < 0){
+				ballSpeedY = -ballSpeedY
+			}
+		}
+	</script>
+	</body>
+</html>
