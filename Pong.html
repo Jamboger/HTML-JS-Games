@@ -114,7 +114,7 @@
 			
 			//player1 scored
 			if(ballX > canvas.width+10){
-				player2Score += 1;
+				player1Score += 1;
 				ballReset();
 			}
 			
@@ -156,6 +156,7 @@
 			ballX = canvas.width/2;
 			ballY = canvas.height/2;
 			ballSpeedX = -ballSpeedX;
+			ballSpeedY = 0;
 		}
 		
 		function incrementSpeed(){
