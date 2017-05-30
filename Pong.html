@@ -156,6 +156,11 @@
 			ballX = canvas.width/2;
 			ballY = canvas.height/2;
 			ballSpeedX = -ballSpeedX;
+			if(ballSpeedY < 0){
+				ballSpeedY = -5;
+			} else{
+				ballSpeedY = 5;
+			}
 		}
 		
 		function incrementSpeed(){
